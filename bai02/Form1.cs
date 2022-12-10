@@ -12,41 +12,52 @@ namespace bai02
 {
     public partial class Form1 : Form
     {
-        Bitmap bm;
-        Rectangle rect;
-
+        Rectangle rect = new Rectangle(270, 120, 50, 50);
+        bool isMouseDown = false;
         public Form1()
         {
             InitializeComponent();
-            this.Width = 800;
-            this.Height = 800;
         }
 
-        private void DrawRectangle(object sender, PaintEventArgs e)
+        private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
-            Pen blackPen = new Pen(Color.Black, 3);
-            rect = new Rectangle(350, 350, 50, 50);
-            e.Graphics.DrawRectangle(blackPen, rect);
+            e.Graphics.FillRectangle(new SolidBrush(Color.RoyalBlue), rect);
         }
 
-        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
-             switch (e.KeyCode)
+            isMouseDown = true;
+        }
+
+        private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isMouseDown == true)
+            {
+                rect.Location = e.Location;
+
+                if (rect.Right > pictureBox1.Width)
                 {
-                    case Keys.Up:
-                    rect.Location = new Point(rect.Location.X, rect.Location.Y - 1);
-                        break;
-                    case Keys.Down:
-                    rect.Location = new Point(rect.Location.X, rect.Location.Y + 1);
-                        break;
-                    case Keys.Right:
-                    rect.Location = new Point(rect.Location.X + 1, rect.Location.Y);
-                        break;
-                    case Keys.Left:
-                    rect.Location = new Point(rect.Location.X - 1, rect.Location.Y);
-                        break;
+                    rect.X = pictureBox1.Width - rect.Width;
                 }
-            
+                if (rect.Top < 0)
+                {
+                    rect.Y = 0;
+                }
+                if (rect.Left < 0)
+                {
+                    rect.X = 0;
+                }
+                if (rect.Bottom > pictureBox1.Height)
+                {
+                    rect.Y = pictureBox1.Height - rect.Height;
+                }
+                Refresh();
+            }
+        }
+
+        private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
+        {
+            isMouseDown = false;
         }
     }
 }

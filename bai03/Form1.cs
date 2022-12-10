@@ -12,21 +12,34 @@ namespace bai03
 {
     public partial class Form1 : Form
     {
-        Bitmap bm;
-        Graphics g;
-        Pen blackPen = new Pen(Color.Black, 3);
+        Rectangle mRect;
 
         public Form1()
         {
             InitializeComponent();
-            bm = new Bitmap(600, 600);
-            g = Graphics.FromImage(bm);
         }
-
+        
         private void Form1_MouseDown(object sender, MouseEventArgs e)
         {
-            g.DrawEllipse(blackPen, e.X, e.Y, 10, 10);
+            mRect = new Rectangle(e.X, e.Y, 0, 0);
+            this.Invalidate();
         }
 
+        private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                mRect = new Rectangle(mRect.Left, mRect.Top, e.X - mRect.Left, e.Y - mRect.Top);
+                this.Invalidate();
+            }
+        }
+
+        private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        {
+            using (Pen pen = new Pen(Color.Red, 2))
+            {
+                e.Graphics.DrawRectangle(pen, mRect);
+            }
+        }
     }
 }
